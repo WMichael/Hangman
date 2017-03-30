@@ -4,7 +4,13 @@ The player has 8 chances to guess what the word is, after the game ends then the
 A text art representation is shown to represent lives left.
 """
 from random import randint
+import os
 
+# Used to clear screen
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Holding current score
 class Score:
     def __init__(self):
         self.wins = 0
@@ -18,7 +24,7 @@ class Score:
 
     def score(self):
         print("- Wins: {0} Losses: {1}".format(self.wins,self.losses))
-
+# Holds game state, guess function and representation of game function.
 class Game:
     def __init__(self,word):
         self.actual_word = list() #hidden word
@@ -36,6 +42,9 @@ class Game:
             self.display_word.append("*")
 
     def guess(self,char):
+        clear()
+        print("Hangman - Created by Michael.W")
+        print("----------------------")
         if len(char) != 1: # Checks that only one character has been inputted.
             print("- Please enter only one character!")
         else:
@@ -83,18 +92,22 @@ def representation(chances):
 # The Game
 repeat = True
 score = Score()
-print("Hangman - Created by Michael.W")
-print("----------------------")
 
+# Whilst game is running
 while repeat is True:
+    clear()
+    print("Hangman - Created by Michael.W")
+    print("----------------------")
     with open("words.txt", "r") as w: # opens word file.
         words = w.read().splitlines()
 
+    #Creates a new game with random word.
     game = Game(words[randint(0,len(words))])
     representation(game.remaining_chances)
     print("- {}".format(game.displayed_word()))
     print("----------------------")
 
+    # When player is currently guessing a word
     while game.finished == False:
         game.guess(input("What's your Guess? ")) #Inputs guess
         representation(game.remaining_chances)
@@ -121,4 +134,3 @@ while repeat is True:
 
     if input("Press 'y' to play again ") != "y": # To continue the game
         repeat = False
-    print("----------------------")
